@@ -1,0 +1,35 @@
+#!/bin/sh
+# fuck you meeper
+IFS=""; LANG=C
+# index's
+index="A B C D E F G H I J K L M N O P Q R S T U V W X Y Z 1 2 3 4 5 6 7 8 9 0"
+exb=".- -... -.-. -.. . ..-. --. .... .. .--- -.- .-.. -- -. --- .--. --.- .-. ... - ..- ...- .-- -..- -.-- --.. .---- ..--- ...-- ....- ..... -.... --... ---.. ----. -----"
+
+# I live in pain
+fresolve() {
+  lre ${index} "$2"
+}
+lre() {
+  eval letter=\${$#}
+  n=1; while [ $n -le 36 ]; do
+    case "$letter" in
+      "$n") eval cur=\${$n}; printf '%s' "$cur"
+    esac
+  : $((n+=1))
+  done
+}
+
+
+while read -r p || [ -n "$p" ]; do
+  p=${p# }; p=${p% }
+  n1="0"; IFS=" "; for i in ${p}; do
+    for ii in $exb; do 
+      : $((n1+=1));
+      case "$ii" in 
+        "$i") fresolve "$ii" "$n1"
+      esac
+    done
+    n1=0
+  done
+done # stdin read; fuck you
+echo
