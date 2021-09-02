@@ -1,35 +1,56 @@
 #!/bin/sh
-# fuck you meeper
+# -. --- - .. -.-. . -- . -- . . .--. . .-.
+# shellcheck disable=SC2086,SC1083,SC2154
+# SC2086 - required for IFS replacement
+# SC1083 - required for eval
+# SC2154 - eval sets $cur
 IFS=""; LANG=C
 # index's
-index="A B C D E F G H I J K L M N O P Q R S T U V W X Y Z 1 2 3 4 5 6 7 8 9 0"
-exb=".- -... -.-. -.. . ..-. --. .... .. .--- -.- .-.. -- -. --- .--. --.- .-. ... - ..- ...- .-- -..- -.-- --.. .---- ..--- ...-- ....- ..... -.... --... ---.. ----. -----"
+index="A:B:C:D:E:F:G:H:I:J:K:L:M:N:O:P:Q:R:S:T:U:V:W:X:Y:Z:1:2:3:4:5:6:7:8:9:0" # 36 items
+indexl="a:b:c:d:e:f:g:h:i:j:k:l:m:n:o:p:q:r:s:t:u:v:w:x:y:z:1:2:3:4:5:6:7:8:9:0" # lowercase index for ascii
+exb=".-:-...:-.-.:-..:.:..-.:--.:....:..:.---:-.-:.-..:--:-.:---:.--.:--.-:.-.:...:-:..-:...-:.--:-..-:-.--:--..:.----:..---:...--:....-:.....:-....:--...:---..:----.:-----"
 
-# I live in pain
-fresolve() {
-  lre ${index} "$2"
-}
-lre() {
+ma() {
   eval letter=\${$#}
-  n=1; while [ $n -le 36 ]; do
-    case "$letter" in
-      "$n") eval cur=\${$n}; printf '%s' "$cur"
-    esac
-  : $((n+=1))
-  done
+  eval cur=\${$letter}; printf '%s' "$cur"
 }
 
+am() {
+  IFS=""
+  eval letter=\${$#};
+  [ $letter -gt 36 ] && : $((letter-=36))
+  eval cur=\${$letter}; printf '%s ' "$cur"
+}
 
 while read -r p || [ -n "$p" ]; do
   p=${p# }; p=${p% }
-  n1="0"; IFS=" "; for i in ${p}; do
-    for ii in $exb; do 
-      : $((n1+=1));
-      case "$ii" in 
-        "$i") fresolve "$ii" "$n1"
-      esac
-    done
-    n1=0
-  done
+  case "$p" in
+    -*|.*)
+      # for morse to ascii
+      n1="0"; IFS=": "; for i in ${p}; do
+        for ii in $exb; do 
+          : $((n1+=1));
+          case "$ii" in 
+            "$i") ma ${index} "$n1"
+          esac
+        done
+        n1=0
+      done ;;
+    *)
+      # ascii to morse
+      while [ "$p" ]; do
+        next="${p#?}"; # ${p%$next} is the current letter
+        IFS=":"; na="0"; for ai in ${index} ${indexl}; do
+          # echo $ai
+          : $((na+=1))
+          case "$ai" in
+            "${p%$next}") am $exb $na; break;;
+          esac
+        done
+        na=0
+        p="$next"
+      done
+    ;;
+  esac
 done # stdin read; fuck you
 echo
