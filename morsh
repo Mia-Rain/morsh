@@ -6,19 +6,20 @@
 # SC2154 - eval sets $cur
 IFS=""; LANG=C
 # index's
-index="A:B:C:D:E:F:G:H:I:J:K:L:M:N:O:P:Q:R:S:T:U:V:W:X:Y:Z:1:2:3:4:5:6:7:8:9:0" # 36 items
-indexl="a:b:c:d:e:f:g:h:i:j:k:l:m:n:o:p:q:r:s:t:u:v:w:x:y:z:1:2:3:4:5:6:7:8:9:0" # lowercase index for ascii
-exb=".-:-...:-.-.:-..:.:..-.:--.:....:..:.---:-.-:.-..:--:-.:---:.--.:--.-:.-.:...:-:..-:...-:.--:-..-:-.--:--..:.----:..---:...--:....-:.....:-....:--...:---..:----.:-----"
+index="A:B:C:D:E:F:G:H:I:J:K:L:M:N:O:P:Q:R:S:T:U:V:W:X:Y:Z:1:2:3:4:5:6:7:8:9:0: " # 36 items
+indexl="a:b:c:d:e:f:g:h:i:j:k:l:m:n:o:p:q:r:s:t:u:v:w:x:y:z:1:2:3:4:5:6:7:8:9:0: " # lowercase index for ascii
+exb=".-:-...:-.-.:-..:.:..-.:--.:....:..:.---:-.-:.-..:--:-.:---:.--.:--.-:.-.:...:-:..-:...-:.--:-..-:-.--:--..:.----:..---:...--:....-:.....:-....:--...:---..:----.:-----:/"
 
 ma() {
   eval letter=\${$#}
-  eval cur=\${$letter}; printf '%s' "$cur"
+  eval cur=\${$letter}; [ "$cur" = 37 ] && cur=" " # IFS=": " causes #37 in $index to be lost
+  printf '%s' "$cur"
 }
 
 am() {
   IFS=""
   eval letter=\${$#};
-  [ $letter -gt 36 ] && : $((letter-=36))
+  [ $letter -gt 37 ] && : $((letter-=37))
   eval cur=\${$letter}; printf '%s ' "$cur"
 }
 
@@ -43,8 +44,8 @@ while read -r p || [ -n "$p" ]; do
         IFS=":"; na="0"; for ai in ${index} ${indexl}; do
           # echo $ai
           : $((na+=1))
-          case "$ai" in
-            "${p%$next}") am $exb $na; break;;
+          case "${p%$next}" in
+            "$ai") am $exb $na; break;;
           esac
         done
         na=0
