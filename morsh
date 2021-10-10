@@ -13,7 +13,7 @@ exb=".-:-...:-.-.:-..:.:..-.:--.:....:..:.---:-.-:.-..:--:-.:---:.--.:--.-:.-.:.
 ma() {
   eval letter=\${$#}
   eval cur=\${$letter}; [ "$cur" = 37 ] && cur=" " # IFS=": " causes #37 in $index to be lost
-  printf '%s' "$cur"
+  printf '%s' "${cur}"
 }
 
 am() {
@@ -23,9 +23,28 @@ am() {
   eval cur=\${$letter}; printf '%s ' "$cur"
 }
 
-while read -r p || [ -n "$p" ]; do
+unset bang; line=1; while read -r p || [ -n "$p" ]; do
   p=${p# }; p=${p% }
+  [ "$line" -eq 1 -o "$bang" ] 2>/dev/null && { # start comment check # this is basically a shitpost lol
+    case "$p" in
+      '#'!*) bang=" ";;
+      '#'*) p="${p#\#}"; printf '%sl: %s\n#' "${bang# }" "${line}"
+      bang='
+'     # big hack to add newlines to start if >1
+      n1="0"; IFS=": "; for i in ${p}; do
+        for ii in $exb; do
+          : $((n1+=1));
+          case "$ii" in
+            "$i") ma ${index} "$n1"
+          esac
+        done
+        n1=0
+      done ;;
+    esac # this only converts morse
+    [ "$bang" ] && unset p
+  }
   case "$p" in
+    #"") ;; # skip empty lines
     -*|.*)
       # for morse to ascii
       n1="0"; IFS=": "; for i in ${p}; do
@@ -53,5 +72,6 @@ while read -r p || [ -n "$p" ]; do
       done
     ;;
   esac
+  : $((line+=1))
 done # stdin read; fuck you
 echo
