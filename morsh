@@ -1,5 +1,5 @@
 #!/bin/sh
-# -. --- - .. -.-. . -- . -- . . .--. . .-.
+# -. --- - .. -.-. . / -- . / -- . . .--. . .-.
 # shellcheck disable=SC2086,SC1083,SC2154
 # SC2086 - required for IFS replacement
 # SC1083 - required for eval
@@ -28,7 +28,7 @@ unset bang; line=1; while read -r p || [ -n "$p" ]; do
   [ "$line" -eq 1 -o "$bang" ] 2>/dev/null && { # start comment check # this is basically a shitpost lol
     case "$p" in
       '#'!*) bang=" ";;
-      '#'*) p="${p#\#}"; printf '%sl: %s\n#' "${bang# }" "${line}"
+      '#'?-*|'#'?.*) p="${p#\#}"; printf '%sl: %s\n# ' "${bang# }" "${line}"
       bang='
 '     # big hack to add newlines to start if >1
       n1="0"; IFS=": "; for i in ${p}; do
@@ -41,10 +41,10 @@ unset bang; line=1; while read -r p || [ -n "$p" ]; do
         n1=0
       done ;;
     esac # this only converts morse
-    [ "$bang" ] && unset p
+    [ "$bang" ] && p="?"
   }
   case "$p" in
-    #"") ;; # skip empty lines
+    "") echo ;; # skip empty lines
     -*|.*)
       # for morse to ascii
       n1="0"; IFS=": "; for i in ${p}; do
