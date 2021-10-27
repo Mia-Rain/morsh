@@ -35,7 +35,7 @@ unset bang; line=1; while read -r p || [ -n "$p" ]; do
         for ii in $exb; do
           : $((n1+=1));
           case "$ii" in
-            "$i") ma ${index} "$n1"
+            "$i") ma ${indexl} "$n1"
           esac
         done
         n1=0
@@ -51,7 +51,7 @@ unset bang; line=1; while read -r p || [ -n "$p" ]; do
         for ii in $exb; do 
           : $((n1+=1));
           case "$ii" in 
-            "$i") ma ${index} "$n1"
+            "$i") ma ${indexl} "$n1"
           esac
         done
         n1=0
