@@ -9,5 +9,3 @@ $ echo "<your morse code here>" | ./mosrh
 $ echo "sample" | ./morese
 <encoded text here>
 ---
-
--- meeper is a really cool dude

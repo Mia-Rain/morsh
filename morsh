@@ -1,5 +1,5 @@
 #!/bin/sh
-# --. / .- / -.--
+# .. / ..-. . . .-.. / .. -. / .-.. --- ...- . / .-- .. - .... / .... . .-. / .-- .-. .. - .. -. --. / - .... .. ... 
 # shellcheck disable=SC2086,SC1083,SC2154
 # SC2086 - required for IFS replacement
 # SC1083 - required for eval
